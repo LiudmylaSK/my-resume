@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Резюме – Людмила Кокоуліна</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" /> -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ── Toolbar ─────────────────────────────────────────────── -->
+    <div id="toolbar">
+      <button class="btn btn-outline" id="reloadDataBtn" type="button">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.93V17a1 1 0 0 1-2 0v-.07A8 8 0 0 1 4.07 11H5a1 1 0 0 1 0 2H4.07A8 8 0 0 1 11 4.07V5a1 1 0 0 1 2 0v-.93A8 8 0 0 1 19.93 11H19a1 1 0 0 1 0-2h.93A8 8 0 0 1 13 16.93z"
+          />
+        </svg>
+        Оновити дані
+      </button>
+      <button class="btn btn-outline" id="editDataBtn" type="button">
+        Редагувати
+      </button>
+      <button class="btn" id="savePdfBtn" type="button">
+        <svg viewBox="0 0 24 24">
+          <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+        </svg>
+        Зберегти PDF
+      </button>
+    </div>
+
+    <!-- ── Resume card ─────────────────────────────────────────── -->
+    <div id="resume">
+      <!-- SIDEBAR -->
+      <aside id="sidebar">
+        <div class="photo-wrap" id="photoWrap">
+          <div class="photo-placeholder">👤</div>
+        </div>
+
+        <div class="sidebar-section" id="contactsSection">
+          <h3>Контакти</h3>
+          <ul class="contact-list" id="contactsList"></ul>
+        </div>
+
+        <div class="sidebar-section" id="skillsSection">
+          <h3>Навички</h3>
+          <ul class="skill-list" id="skillsList"></ul>
+        </div>
+
+        <div class="sidebar-section" id="eduSection">
+          <h3>Освіта</h3>
+          <div class="edu-list" id="eduList"></div>
+        </div>
+
+        <div class="sidebar-section" id="volSection">
+          <h3>Волонтерство</h3>
+          <ul class="vol-list" id="volList"></ul>
+        </div>
+
+        <div class="sidebar-section" id="langSection">
+          <h3>Мови</h3>
+          <ul class="lang-list" id="langList"></ul>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <main id="main">
+        <div class="name-block">
+          <h1 id="resumeName"></h1>
+        </div>
+
+        <section>
+          <p class="section-title">Про мене</p>
+          <div class="section-divider"></div>
+          <p class="about-text" id="aboutText"></p>
+        </section>
+
+        <section>
+          <p class="section-title">Досвід роботи</p>
+          <div class="section-divider"></div>
+          <div class="exp-list" id="expList"></div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Toast -->
+    <div class="editor-overlay" id="editorOverlay" aria-hidden="true">
+      <section class="editor-panel" role="dialog" aria-modal="true" aria-labelledby="editorTitle">
+        <div class="editor-header">
+          <div>
+            <p class="editor-kicker">Дані резюме</p>
+            <h2 id="editorTitle">Редактор</h2>
+          </div>
+          <button class="editor-close" id="closeEditorBtn" type="button" aria-label="Закрити редактор">×</button>
+        </div>
+
+        <form id="resumeEditor" class="editor-form">
+          <fieldset>
+            <legend>Основне</legend>
+            <label>
+              Ім'я
+              <input id="editName" type="text" />
+            </label>
+            <label>
+              Фото
+              <input id="editPhoto" type="text" placeholder="photo.jpg" />
+            </label>
+            <label>
+              Про мене
+              <textarea id="editAbout" rows="5"></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Контакти</legend>
+            <label>
+              Email
+              <input id="editEmail" type="email" />
+            </label>
+            <label>
+              Телефон
+              <input id="editPhone" type="tel" />
+            </label>
+            <label>
+              Локація
+              <input id="editLocation" type="text" />
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Навички</legend>
+            <label>
+              По одній навичці в рядку
+              <textarea id="editSkills" rows="7"></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Освіта</legend>
+            <label>
+              Формат: назва | заклад
+              <textarea id="editEducation" rows="5"></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Волонтерство</legend>
+            <label>
+              По одному пункту в рядку
+              <textarea id="editVolunteering" rows="4"></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Мови</legend>
+            <label>
+              Формат: мова | рівень
+              <textarea id="editLanguages" rows="3"></textarea>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Досвід</legend>
+            <div class="editor-row">
+              <button class="mini-btn" id="addExperienceBtn" type="button">Додати місце роботи</button>
+            </div>
+            <div class="experience-editor" id="experienceEditor"></div>
+          </fieldset>
+        </form>
+
+        <div class="editor-actions">
+          <button class="btn btn-outline" id="resetDataBtn" type="button">Скинути зміни</button>
+          <button class="btn btn-outline" id="downloadJsonBtn" type="button">Завантажити JSON</button>
+          <button class="btn" id="applyDataBtn" type="button">Готово</button>
+        </div>
+      </section>
+    </div>
+    <div id="toast"></div>
+    <script src="script.js" defer></script>
+  </body>
+</html>
