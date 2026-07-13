@@ -37,10 +37,15 @@
   --sidebar-w: 70mm;
   --gap: 1.5rem;
   --radius: 6px;
+  --page-w: 210mm;
+  --page-h: 297mm;
+  --page-gutter: clamp(0.75rem, 3vw, 2rem);
 }
 
 html {
   font-size: 14px;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 body {
   font-family: Helvetica, Arial, sans-serif;
@@ -50,16 +55,18 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-inline: var(--page-gutter);
+  overflow-x: hidden;
 }
 
 /* ── Print toolbar ────────────────────────────────────── */
 #toolbar {
   width: 100%;
-  max-width: 800px;
+  max-width: var(--page-w);
   display: flex;
   justify-content: flex-end;
   gap: 0.6rem;
-  padding: 1rem 1rem 0.5rem;
+  padding: 1rem 0 0.5rem;
 }
 .btn {
   display: inline-flex;
@@ -129,17 +136,16 @@ body {
 
 /* ── Resume card ──────────────────────────────────────── */
 #resume {
-  /* width: 100%;
-  max-width: 900px; */
-  width: 210mm;
-  height: 297mm;
+  width: min(100%, var(--page-w));
+  min-height: var(--page-h);
   background: var(--white);
   box-shadow: 0 4px 32px rgba(30, 42, 58, 0.13);
   border-radius: var(--radius);
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
-  overflow: hidden;
+  overflow: visible;
   margin-bottom: 2rem;
+  overflow-wrap: break-word;
 }
 
 /* ── Sidebar ──────────────────────────────────────────── */
@@ -186,12 +192,14 @@ body {
 
 .sidebar-section h3 {
   font-size: 0.7rem;
+
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent-lt);
   margin-bottom: 0.7rem;
   padding-bottom: 0.35rem;
+  border-bottom: 1px solid rgba(173, 184, 212, 0.4);
   border-bottom: 1px solid color-mix(in srgb, var(--accent-lt) 40%, transparent);
 }
 
@@ -219,6 +227,7 @@ body {
 .contact-list a {
   color: inherit;
   text-decoration: none;
+  overflow-wrap: anywhere;
 }
 .contact-list a:hover {
   text-decoration: underline;
@@ -276,7 +285,7 @@ body {
   gap: 0.6rem;
 }
 .vol-list li {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.82);
   padding-left: 0.75rem;
@@ -303,6 +312,7 @@ body {
 .lang-list li {
   display: flex;
   justify-content: space-between;
+  gap: 0.75rem;
   font-size: 0.78rem;
 }
 .lang-list .lang-name {
@@ -353,6 +363,7 @@ body {
   line-height: 1.75;
   color: var(--text);
   text-align: justify;
+  hyphens: auto;
 }
 
 /* Experience */
@@ -361,8 +372,8 @@ body {
   flex-direction: column;
   gap: 1.6rem;
 }
-.exp-item {
-}
+/* .exp-item {
+} */
 .exp-period {
   font-size: 0.7rem;
   color: var(--muted);
@@ -396,6 +407,7 @@ body {
   color: var(--text);
   padding-left: 1rem;
   position: relative;
+  hyphens: auto;
 }
 /* .exp-duties li::before {
   content: "";
@@ -417,18 +429,49 @@ body {
 
 /* ── PDF print styles ─────────────────────────────────── */
 @media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html,
   body {
     background: white;
+    width: var(--page-w);
+    min-height: var(--page-h);
+    padding: 0;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
+
   #toolbar,
+  #toast,
   .editor-overlay {
     display: none !important;
   }
+
   #resume {
     box-shadow: none;
     border-radius: 0;
-    max-width: 100%;
-    width: 100%;
+    width: var(--page-w);
+    min-height: var(--page-h);
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  section,
+  .sidebar-section,
+  .exp-item,
+  .edu-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  #sidebar {
+    min-height: var(--page-h);
   }
 }
 
@@ -589,7 +632,13 @@ body {
   :root {
     --sidebar-w: 100%;
   }
+  body {
+    padding-inline: 0;
+  }
   #resume {
+    width: 100%;
+    min-height: 0;
+    border-radius: 0;
     grid-template-columns: 1fr;
   }
   #sidebar {
