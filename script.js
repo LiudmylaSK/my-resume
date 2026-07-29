@@ -36,6 +36,46 @@ function splitLines(value) {
     .filter(Boolean);
 }
 
+function normalizeVolunteering(items) {
+  if (!Array.isArray(items)) return [];
+
+  return items.map((item) => {
+    if (
+      typeof item === "object" &&
+      item?.description?.startsWith("ГО «Друзі спільноти святого Егідія»:")
+    ) {
+      return {
+        ...item,
+        organization: "ГО «Друзі спільноти святого Егідія»",
+        description: item.description.replace(
+          "ГО «Друзі спільноти святого Егідія»: ",
+          "",
+        ),
+      };
+    }
+    if (
+      typeof item === "string" &&
+      item.toLowerCase().includes("підтримка впо")
+    ) {
+      return {
+        period: "2023 – до теперішнього часу",
+        organization: "ГО «Друзі спільноти святого Егідія»",
+        description: item.replace(
+          /\s*–\s*2023\s*–\s*до теперішнього часу:\s*/,
+          ": ",
+        ).replace("ГО «Друзі спільноти святого Егідія»: ", ""),
+      };
+    }
+    if (
+      typeof item === "string" &&
+      item.startsWith("Підтримка ЗСУ та медичної сфери")
+    ) {
+      return { period: "2024–2025", description: item };
+    }
+    return item;
+  });
+}
+
 function normalizeData(data) {
   return {
     name: data?.name || "",
@@ -48,7 +88,7 @@ function normalizeData(data) {
     },
     skills: Array.isArray(data?.skills) ? data.skills : [],
     education: Array.isArray(data?.education) ? data.education : [],
-    volunteering: Array.isArray(data?.volunteering) ? data.volunteering : [],
+    volunteering: normalizeVolunteering(data?.volunteering),
     languages: Array.isArray(data?.languages) ? data.languages : [],
     experience: Array.isArray(data?.experience) ? data.experience : [],
   };
@@ -77,7 +117,7 @@ function renderResume(data) {
   renderContacts(d.contacts);
   renderSimpleList("skillsList", d.skills);
   renderEducation(d.education);
-  renderSimpleList("volList", d.volunteering);
+  renderVolunteering(d.volunteering);
   renderLanguages(d.languages);
   renderExperience(d.experience);
 }
@@ -122,6 +162,20 @@ function renderContacts(contacts) {
 
 function renderSimpleList(id, items) {
   $(id).innerHTML = items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+}
+
+function renderVolunteering(items) {
+  $("volList").innerHTML = items
+    .map((item) => {
+      if (typeof item === "string") return `<li>${escapeHtml(item)}</li>`;
+
+      const period = item?.period ? `<p class="exp-period">${escapeHtml(item.period)}</p>` : "";
+      const organization = item?.organization
+        ? `<span class="vol-org">${escapeHtml(item.organization)}</span> `
+        : "";
+      return `<li>${period}${organization}<span>${escapeHtml(item?.description || "")}</span></li>`;
+    })
+    .join("");
 }
 
 function renderEducation(items) {
@@ -225,7 +279,13 @@ function fillEditor(data) {
   $("editEducation").value = d.education
     .map((item) => `${item.degree || ""} | ${item.institution || ""}`)
     .join("\n");
-  $("editVolunteering").value = d.volunteering.join("\n");
+  $("editVolunteering").value = d.volunteering
+    .map((item) =>
+      typeof item === "string"
+        ? item
+        : `${item.period || ""} | ${item.organization || ""} | ${item.description || ""}`,
+    )
+    .join("\n");
   $("editLanguages").value = d.languages
     .map((item) => `${item.language || ""} | ${item.level || ""}`)
     .join("\n");
@@ -248,7 +308,14 @@ function readEditorData() {
       const [degree = "", institution = ""] = line.split("|").map((part) => part.trim());
       return { degree, institution };
     }),
-    volunteering: splitLines($("editVolunteering").value),
+    volunteering: splitLines($("editVolunteering").value).map((line) => {
+      const [period, organization, ...descriptionParts] = line
+        .split("|")
+        .map((part) => part.trim());
+      const description = descriptionParts.join(" | ");
+      if (description) return { period, organization, description };
+      return organization ? { period, description: organization } : period;
+    }),
     languages: splitLines($("editLanguages").value).map((line) => {
       const [language = "", level = ""] = line.split("|").map((part) => part.trim());
       return { language, level };
@@ -414,8 +481,17 @@ const FALLBACK_DATA = {
     },
   ],
   volunteering: [
-    "Підтримка ВПО (надання інформаційної підтримки та перенаправлення до доступних сервісів допомоги; видача гуманітарної допомоги; участь у реалізації благодійних ініціатив)",
-    "Підтримка ЗСУ та медичної сфери (виготовлення, пакування, відправка маскувальних сіток і адаптивних подушок для військових підрозділів і госпіталів)",
+    {
+      period: "2023 – до теперішнього часу",
+      organization: "ГО «Друзі спільноти святого Егідія»",
+      description:
+        "Підтримка ВПО (надання інформаційної підтримки та перенаправлення до доступних сервісів допомоги; видача гуманітарної допомоги; участь у реалізації благодійних ініціатив)",
+    },
+    {
+      period: "2024–2025",
+      description:
+        "Підтримка ЗСУ та медичної сфери (виготовлення, пакування, відправка маскувальних сіток і адаптивних подушок для військових підрозділів і госпіталів)",
+    },
   ],
   languages: [
     { language: "Українська", level: "вільно" },
