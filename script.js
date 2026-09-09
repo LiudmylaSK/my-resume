@@ -79,6 +79,7 @@ function normalizeVolunteering(items) {
 function normalizeData(data) {
   return {
     name: data?.name || "",
+    targetPosition: data?.targetPosition || "",
     photo: data?.photo || "",
     about: data?.about || "",
     contacts: {
@@ -112,6 +113,8 @@ function renderResume(data) {
   resumeData = d;
 
   $("resumeName").textContent = d.name;
+  $("targetPosition").textContent = d.targetPosition;
+  $("targetPosition").hidden = !d.targetPosition;
   $("aboutText").textContent = d.about;
   renderPhoto(d);
   renderContacts(d.contacts);
@@ -270,6 +273,7 @@ function closeEditor() {
 function fillEditor(data) {
   const d = normalizeData(data);
   $("editName").value = d.name;
+  $("editTargetPosition").value = d.targetPosition;
   $("editPhoto").value = d.photo;
   $("editAbout").value = d.about;
   $("editEmail").value = d.contacts.email;
@@ -296,6 +300,7 @@ function fillEditor(data) {
 function readEditorData() {
   return normalizeData({
     name: $("editName").value.trim(),
+    targetPosition: $("editTargetPosition").value.trim(),
     photo: $("editPhoto").value.trim(),
     about: $("editAbout").value.trim(),
     contacts: {
@@ -444,6 +449,7 @@ async function initResume() {
 
 const FALLBACK_DATA = {
   name: "ЛЮДМИЛА КОКОУЛІНА",
+  targetPosition: "",
   photo: "photo.jpg",
   about:
     "Фахівчиня з понад 10-річним досвідом роботи з документацією, базами даних, реєстрами та аналітичною звітністю. Маю практичний досвід збору, систематизації, перевірки та адміністрування даних, ведення електронних реєстрів і підготовки звітів. Працювала з CRM-системами, спеціалізованим програмним забезпеченням, Excel та іншими інструментами обробки даних. Добре розумію потреби вразливих категорій населення завдяки досвіду волонтерської діяльності. Пройшла навчання з кейс-менеджменту та моніторингу й оцінювання для громадських організацій. Відповідальна, уважна до деталей, дотримуюся принципів конфіденційності та якості даних.",

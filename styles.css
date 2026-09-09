@@ -7,22 +7,6 @@
   padding: 0;
 }
 
-/* :root {
-  --navy: #1e2a3a;
-  --navy-mid: #253348;
-  --navy-lt: #2d3f55;
-  --accent: #4a6282;
-  --accent-lt: #a0a4bc;
-  --white: #ffffff;
-  --off-white: #f4f6f8;
-  --text: #1a2030;
-  --muted: #5a6a7e;
-  --divider: #dde3ea;
-  --sidebar-w: 70mm;
-  --gap: 1.5rem;
-  --radius: 6px;
-} */
-
 :root {
   --navy: #3d4a5c;
   --navy-mid: #4a5870;
@@ -343,12 +327,18 @@ body {
   color: var(--navy);
   letter-spacing: 0.01em;
   line-height: 1.1;
-  margin-bottom: 0.1rem;
+  margin-bottom: 0.5rem;
+}
+.target-position {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--accent);
+  line-height: 1.35;
 }
 
 /* Section titles */
 .section-title {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -358,16 +348,16 @@ body {
 .section-divider {
   height: 1px;
   background: var(--divider);
-  margin-bottom: 1.1rem;
+  margin-bottom: 0.6rem;
 }
 
 /* About */
 .about-text {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   line-height: 1.75;
   color: var(--text);
   text-align: justify;
-  hyphens: auto;
+  /* hyphens: auto; */
 }
 
 /* Experience */
@@ -395,7 +385,7 @@ body {
   margin-bottom: 0.1rem;
 }
 .exp-position {
-  font-size: 1rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--navy);
   margin-bottom: 0.55rem;
