@@ -60,10 +60,9 @@ function normalizeVolunteering(items) {
       return {
         period: "2023 – до теперішнього часу",
         organization: "ГО «Друзі спільноти святого Егідія»",
-        description: item.replace(
-          /\s*–\s*2023\s*–\s*до теперішнього часу:\s*/,
-          ": ",
-        ).replace("ГО «Друзі спільноти святого Егідія»: ", ""),
+        description: item
+          .replace(/\s*–\s*2023\s*–\s*до теперішнього часу:\s*/, ": ")
+          .replace("ГО «Друзі спільноти святого Егідія»: ", ""),
       };
     }
     if (
@@ -154,17 +153,23 @@ function renderContacts(contacts) {
     );
   }
   if (contacts.phone) {
-    items.push(`<li>${icons.phone}<span>${escapeHtml(contacts.phone)}</span></li>`);
+    items.push(
+      `<li>${icons.phone}<span>${escapeHtml(contacts.phone)}</span></li>`,
+    );
   }
   if (contacts.location) {
-    items.push(`<li>${icons.location}<span>${escapeHtml(contacts.location)}</span></li>`);
+    items.push(
+      `<li>${icons.location}<span>${escapeHtml(contacts.location)}</span></li>`,
+    );
   }
 
   $("contactsList").innerHTML = items.join("");
 }
 
 function renderSimpleList(id, items) {
-  $(id).innerHTML = items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+  $(id).innerHTML = items
+    .map((item) => `<li>${escapeHtml(item)}</li>`)
+    .join("");
 }
 
 function renderVolunteering(items) {
@@ -172,7 +177,9 @@ function renderVolunteering(items) {
     .map((item) => {
       if (typeof item === "string") return `<li>${escapeHtml(item)}</li>`;
 
-      const period = item?.period ? `<p class="exp-period">${escapeHtml(item.period)}</p>` : "";
+      const period = item?.period
+        ? `<p class="exp-period">${escapeHtml(item.period)}</p>`
+        : "";
       const organization = item?.organization
         ? `<span class="vol-org">${escapeHtml(item.organization)}</span> `
         : "";
@@ -310,7 +317,9 @@ function readEditorData() {
     },
     skills: splitLines($("editSkills").value),
     education: splitLines($("editEducation").value).map((line) => {
-      const [degree = "", institution = ""] = line.split("|").map((part) => part.trim());
+      const [degree = "", institution = ""] = line
+        .split("|")
+        .map((part) => part.trim());
       return { degree, institution };
     }),
     volunteering: splitLines($("editVolunteering").value).map((line) => {
@@ -322,7 +331,9 @@ function readEditorData() {
       return organization ? { period, description: organization } : period;
     }),
     languages: splitLines($("editLanguages").value).map((line) => {
-      const [language = "", level = ""] = line.split("|").map((part) => part.trim());
+      const [language = "", level = ""] = line
+        .split("|")
+        .map((part) => part.trim());
       return { language, level };
     }),
     experience: readExperienceEditor(),
@@ -377,12 +388,14 @@ function renderExperienceEditor(items = []) {
 }
 
 function readExperienceEditor() {
-  return [...$("experienceEditor").querySelectorAll(".experience-card")].map((card) => ({
-    period: card.querySelector('[data-field="period"]').value.trim(),
-    company: card.querySelector('[data-field="company"]').value.trim(),
-    position: card.querySelector('[data-field="position"]').value.trim(),
-    duties: splitLines(card.querySelector('[data-field="duties"]').value),
-  }));
+  return [...$("experienceEditor").querySelectorAll(".experience-card")].map(
+    (card) => ({
+      period: card.querySelector('[data-field="period"]').value.trim(),
+      company: card.querySelector('[data-field="company"]').value.trim(),
+      position: card.querySelector('[data-field="position"]').value.trim(),
+      duties: splitLines(card.querySelector('[data-field="duties"]').value),
+    }),
+  );
 }
 
 function addExperienceItem() {
@@ -495,6 +508,7 @@ const FALLBACK_DATA = {
     },
     {
       period: "2024–2025",
+      organization: "Ініціатива групи волонтерок»",
       description:
         "Підтримка ЗСУ та медичної сфери (виготовлення, пакування, відправка маскувальних сіток і адаптивних подушок для військових підрозділів і госпіталів)",
     },
@@ -548,7 +562,9 @@ document.addEventListener("DOMContentLoaded", () => {
   $("editDataBtn")?.addEventListener("click", openEditor);
   $("savePdfBtn")?.addEventListener("click", savePDF);
   $("closeEditorBtn")?.addEventListener("click", closeEditor);
-  $("applyDataBtn")?.addEventListener("click", () => applyEditorData({ close: true }));
+  $("applyDataBtn")?.addEventListener("click", () =>
+    applyEditorData({ close: true }),
+  );
   $("downloadJsonBtn")?.addEventListener("click", downloadJson);
   $("resetDataBtn")?.addEventListener("click", resetData);
   $("addExperienceBtn")?.addEventListener("click", addExperienceItem);
